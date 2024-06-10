@@ -1,8 +1,7 @@
-import { Flex, Text, Grid } from "@chakra-ui/react";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { OutletContext } from "../components/Layout";
-
 import axios from "axios";
 import SaleNftCard from "../components/SaleNftCard";
 
@@ -60,15 +59,7 @@ const SaleNft: FC = () => {
   useEffect(() => console.log(nftMetadataArray), [nftMetadataArray]);
 
   return (
-    <Flex
-      bgColor="red.100"
-      w="100%"
-      alignItems="center"
-      flexDir="column"
-      gap={2}
-      mt={8}
-      mb={20}
-    >
+    <Flex w="100%" alignItems="center" flexDir="column" gap={2} mt={8} mb={20}>
       {signer ? (
         <Grid
           templateColumns={[
@@ -83,11 +74,11 @@ const SaleNft: FC = () => {
               key={i}
               nftMetadata={v}
               tokenId={tokenIds[i]}
-              saleContract={saleContract}
               mintContract={mintContract}
-              nftMetadataArray={nftMetadataArray}
-              setNftMetadataArray={setNftMetadataArray}
+              saleContract={saleContract}
               signer={signer}
+              getOnSaleTokens={getOnSaleTokens}
+              getNftMetadata={getNftMetadata}
             />
           ))}
         </Grid>

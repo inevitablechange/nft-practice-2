@@ -20,9 +20,9 @@ interface SaleNftCardProps {
   tokenId: number;
   mintContract: Contract | null;
   saleContract: Contract | null;
-  nftMetadataArray: NftMetadata[];
-  setNftMetadataArray: Dispatch<SetStateAction<NftMetadata[]>>;
-  signer: JsonRpcSigner;
+  signer: JsonRpcSigner | null;
+  getOnSaleTokens: () => Promise<void>;
+  getNftMetadata: () => Promise<void>;
 }
 
 const SaleNftCard: FC<SaleNftCardProps> = ({
@@ -30,9 +30,9 @@ const SaleNftCard: FC<SaleNftCardProps> = ({
   tokenId,
   mintContract,
   saleContract,
-  nftMetadataArray,
-  setNftMetadataArray,
   signer,
+  getOnSaleTokens,
+  getNftMetadata,
 }) => {
   const [currentPrice, setCurrentPrice] = useState<bigint>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,6 +48,16 @@ const SaleNftCard: FC<SaleNftCardProps> = ({
     }
   };
 
+  const getOwnerOf = async () => {
+    try {
+      const response = await mintContract?.ownerOf(tokenId);
+
+      setIsOwner(signer?.address === response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onClickPurchaseNft = async () => {
     try {
       setIsLoading(true);
@@ -58,13 +68,8 @@ const SaleNftCard: FC<SaleNftCardProps> = ({
 
       await response.wait();
 
-      const temp = nftMetadataArray.filter((v) => {
-        if (v.name !== nftMetadata.name) {
-          return v;
-        }
-      });
-
-      setNftMetadataArray(temp);
+      await getOnSaleTokens();
+      await getNftMetadata();
 
       setIsLoading(false);
     } catch (error) {
@@ -72,12 +77,6 @@ const SaleNftCard: FC<SaleNftCardProps> = ({
 
       setIsLoading(false);
     }
-  };
-
-  const getOwnerOf = async () => {
-    const response = await mintContract?.ownerOf(tokenId);
-
-    setIsOwner(signer?.address === response);
   };
 
   useEffect(() => {
