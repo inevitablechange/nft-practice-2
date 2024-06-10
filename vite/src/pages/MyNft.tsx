@@ -5,7 +5,6 @@ import { OutletContext } from "../components/Layout";
 import axios from "axios";
 import { saleContractAddress } from "../abis/contractAddress";
 import NftCard from "../components/NftCard";
-import { Contract } from "ethers";
 
 const PAGE = 3;
 
